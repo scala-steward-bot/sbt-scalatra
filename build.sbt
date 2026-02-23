@@ -12,9 +12,10 @@ lazy val root = (project in file(".")).settings(
     )
   },
   publishTo := {
-    if (version.value.trim.endsWith("SNAPSHOT"))
-      Some(Opts.resolver.sonatypeSnapshots)
-    else Some(Opts.resolver.sonatypeStaging)
+    if (isSnapshot.value)
+      None
+    else
+      localStaging.value
   },
   publishMavenStyle := true,
   pomIncludeRepository := { x => false },
