@@ -21,3 +21,11 @@ libraryDependencies ++= Seq(
 )
 
 enablePlugins(DistPlugin)
+
+lazy val checkDist = taskKey[Unit]("check if the distribution exists")
+
+checkDist := Def.uncached {
+  val zipFile =
+    (Compile / target).value / s"${name.value}-${version.value}.zip"
+  if (!zipFile.isFile) sys.error("distribution not found: " + zipFile)
+}

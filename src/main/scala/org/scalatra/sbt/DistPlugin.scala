@@ -12,6 +12,7 @@ import Keys.*
 import Defaults.*
 import com.earldouglas.sbt.war.WebappComponentsPlugin
 import com.earldouglas.sbt.war.WebappComponentsPlugin.autoImport.warResources
+import sbtcompat.PluginCompat.*
 
 object DistPlugin extends AutoPlugin {
 
@@ -45,9 +46,10 @@ object DistPlugin extends AutoPlugin {
     val tgt = Dist / target
 
     Def.task {
+      implicit val converter: xsbti.FileConverter = fileConverter.value
       IO.delete(tgt.value)
       val (libs, dirs) =
-        cp.value.files partition isArchive
+        toFiles(cp.value).partition(isArchive)
       val jars =
         libs.descendantsExcept(GlobFilter("*"), excl.value) pair Path.flat(
           tgt.value / "lib"
@@ -200,10 +202,12 @@ object DistPlugin extends AutoPlugin {
       ) || PatternFileFilter(".*/WEB-INF/lib")
     },
     Dist / target := (Compile / target)(_ / "dist").value,
-    Dist / assembleJarsAndClasses := assembleJarsAndClassesTask.value,
-    Dist / stage := stageTask.value,
-    Dist / dist := distTask.value,
-    dist := (Dist / dist).value,
+    Dist / assembleJarsAndClasses := Def.uncached(
+      assembleJarsAndClassesTask.value
+    ),
+    Dist / stage := Def.uncached(stageTask.value),
+    Dist / dist := Def.uncached(distTask.value),
+    dist := Def.uncached((Dist / dist).value),
     Dist / name := name.value,
     Dist / runScriptName := name.value,
     Dist / mainClass := Some("ScalatraLauncher"),

@@ -13,7 +13,7 @@ object ScalatraPlugin extends AutoPlugin {
 
   import autoImport.*
 
-  val browseTask = browse := {
+  val browseTask = browse := Def.uncached {
     val log = streams.value.log
 
     val port = warPort.value

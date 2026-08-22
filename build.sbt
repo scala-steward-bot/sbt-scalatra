@@ -45,6 +45,8 @@ lazy val root = (project in file(".")).settings(
   </developers>
 )
 
+addSbtPlugin("com.github.sbt" % "sbt2-compat" % "0.2.0")
+
 enablePlugins(ScriptedPlugin)
 
 scriptedLaunchOpts ++= Seq(

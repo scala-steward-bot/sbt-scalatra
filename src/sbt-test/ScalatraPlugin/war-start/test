@@ -1,0 +1,10 @@
+# Check if the WAR runner is started or not
+> warStart
+
+# wait for servlet container to start
+$ sleep 10000
+
+# check if service is mounted
+> check
+
+> warStop
